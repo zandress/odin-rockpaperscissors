@@ -43,8 +43,12 @@ function playRound(playerSelection, computerSelection) {
         return {results: playerWinsRound, why: paperBeatsRock};
     } else if (player === 'scissors' && computerSelection === 'paper') {
         return {results: playerWinsRound, why: scissorsBeatsPaper};
+    } else if (computerSelection === 'rock' && player === 'scissors') {
+        return {results: computerWinsRound, why: rockBeatsScissors};
+    } else if (computerSelection === 'paper' && player === 'rock') {
+        return {results: computerWinsRound, why: paperBeatsRock};
     } else {
-        return {results: computerWinsRound, why: computerWins};
+        return {results: computerWinsRound, why: scissorsBeatsPaper};
     };
 };
 
@@ -54,9 +58,8 @@ let rockBeatsScissors = 'Rock beats Scissors!';
 let paperBeatsRock = 'Paper beats Rock!';
 let scissorsBeatsPaper = 'Scissors beats Paper!';
 let computerWinsRound = 'Computer wins this round';
-let computerWins = 'it\'s better than you!';
 let draw = 'It\'s a tie';
-let tie = 'ou both threw the same thing down!'
+let tie = 'you both threw the same thing down!'
 let playerWin = 'Player wins the game!';
 let computerWin = 'Computer wins the game!';
 
