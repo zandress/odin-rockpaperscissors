@@ -18,51 +18,67 @@ const computerPlay = () => {
 };
 
 //creating a function that gets the users play
-function getUserChoice(playerSelection) {
-    playerSelection = prompt('Please choose rock, paper, or scissors').toLowerCase();
+function getUserChoice() {
+    playerSelection = prompt('Please choose rock, paper, or scissors');
+    if (playerSelection === null) {
+        return {selection:playerSelection, pass:true};
+    };
+    playerSelection = playerSelection.toLowerCase();
     if (playerSelection === 'rock' || playerSelection === 'paper' || playerSelection === 'scissors') {
-      return playerSelection;
+      return {selection:playerSelection, pass:true};
     } else if (playerSelection !== 'rock' || playerSelection !== 'paper' || playerSelection !== 'scissors') {
       alert('Please choose rock, paper, or scissors!');
-      getUserChoice(playerSelection);
+      return {selection:undefined, pass:false};
     };
   };
 
 // Plays one round of the game
 function playRound(playerSelection, computerSelection) {
-    if (playerSelection === computerSelection) {
-        return draw;
-    } else if (playerSelection === 'rock' && computerSelection === 'scissors') {
-        return playerWinsRound;
-    } else if (playerSelection === 'paper' && computerSelection === 'rock') {
-        return playerWinsRound;
-    } else if (playerSelection === 'scissors' && computerSelection === 'paper') {
-        return playerWinsRound;
+    let player = playerSelection.selection
+    if (player === computerSelection) {
+        return {results: draw, why: tie};
+    } else if (player === 'rock' && computerSelection === 'scissors') {
+        return {results: playerWinsRound, why: rockBeatsScissors};
+    } else if (player === 'paper' && computerSelection === 'rock') {
+        return {results: playerWinsRound, why: paperBeatsRock};
+    } else if (player === 'scissors' && computerSelection === 'paper') {
+        return {results: playerWinsRound, why: scissorsBeatsPaper};
     } else {
-        return computerWinsRound;
+        return {results: computerWinsRound, why: computerWins};
     };
 };
 
 //variables that are called for the result of each round and when a winner is decided
-let playerWinsRound = 'Player wins this round!!';
-let computerWinsRound = 'Computer wins this round!!';
-let draw = 'It\'s a tie!';
+let playerWinsRound = 'Player wins this round';
+let rockBeatsScissors = 'Rock beats Scissors!';
+let paperBeatsRock = 'Paper beats Rock!';
+let scissorsBeatsPaper = 'Scissors beats Paper!';
+let computerWinsRound = 'Computer wins this round';
+let computerWins = 'it\'s better than you!';
+let draw = 'It\'s a tie';
+let tie = 'ou both threw the same thing down!'
 let playerWin = 'Player wins the game!';
 let computerWin = 'Computer wins the game!';
 
 //this function is called to play the game five times and print the scores to the console.
 function game() {
-    playRound();
     //this for loop plays the game until the player or computer has 5 wins then will break out of the loop to end the game.
     for (let i = 0; i < 100; i++) {
-        const playerSelection = getUserChoice();
-        const computerSelection = computerPlay();
+        let playerSelection = getUserChoice();
+        if (!playerSelection.pass) {
+            continue;
+        }
+        if (playerSelection.selection === null) {
+            alert('Thanks for playing!');
+            break;
+        }
+        let computerSelection = computerPlay();
         let roundResult = playRound(playerSelection, computerSelection);
-        console.log('The player threw: ' + playerSelection);
+        console.log('The player threw: ' + playerSelection.selection);
         console.log('The computer threw: ' + computerSelection);
-        console.log(roundResult);
+        console.log(roundResult.results + ' because ' + roundResult.why);
         //calling the keepScore function will add wins to the scoreboard
-        keepScore(roundResult);
+        keepScore(roundResult.results);
         console.log('Your score is: ' + playerScore);
         console.log('Computers score is: ' + computerScore);
         console.log('There are ' + draws + ' tie(s)!');
@@ -88,7 +104,6 @@ function keepScore(result) {
     } else {
         computerScore++;
     };
-
     if (playerScore === 5) {
         console.log(playerWin);
         return;
